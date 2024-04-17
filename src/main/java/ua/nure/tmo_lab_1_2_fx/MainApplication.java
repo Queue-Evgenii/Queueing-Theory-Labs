@@ -28,13 +28,13 @@ public class MainApplication extends Application {
     private final int T2 = 5;
     private final int intervalCount = 25;
     private final int servicesNumberForThirstLab = 6;
-    private final int servicesNumberForFourthLab = 5;
+    private final int servicesNumberForFourthNFifthLab = 5;
     private final float averageServiceTime = 95;
     private final int defaultOverloadSize = 2;
 
     public void lab1() {
         PoissonFlow flow = new PoissonFlow(
-                GeneralHelpers.calculateLambda(groupNumber, studentNumber, 20, 3),
+                GeneralHelpers.calculateFlowIntensity(groupNumber, studentNumber, 20, 3),
                 studentNumber,
                 T1,
                 T2,
@@ -54,14 +54,14 @@ public class MainApplication extends Application {
     }
     public void lab2() {
         PoissonFlow flow1 =  new PoissonFlow(
-                GeneralHelpers.calculateLambda(groupNumber, studentNumber, 28, 3),
+                GeneralHelpers.calculateFlowIntensity(groupNumber, studentNumber, 28, 3),
                 studentNumber,
                 T1,
                 T2,
                 intervalCount
         );
         PoissonFlow flow2 =  new PoissonFlow(
-                GeneralHelpers.calculateLambda(groupNumber, studentNumber, 15, 2),
+                GeneralHelpers.calculateFlowIntensity(groupNumber, studentNumber, 15, 2),
                 studentNumber,
                 T1,
                 T2,
@@ -106,24 +106,25 @@ public class MainApplication extends Application {
         FlowChart ob2j3 = new FlowChart(summaryTauFlow.getSequence(), "Summary flow");
     }
     public void lab3() {
-        ErlangSystem sys = new ErlangSystem(groupNumber, studentNumber, servicesNumberForThirstLab);
+        ErlangDistributionFirst sys = new ErlangDistributionFirst(groupNumber, studentNumber, servicesNumberForThirstLab);
 
 
-        double PN = Math.pow(sys.getRo(), sys.getServicesNumber()) / (GeneralHelpers.factorial(sys.getServicesNumber()) * sys.getSystemSum(sys.getServicesNumber()));
+        double PN = Math.pow(sys.getSystemOverload(), sys.getServicesNumber()) /
+                    (GeneralHelpers.factorial(sys.getServicesNumber()) * sys.getSystemSum(sys.getServicesNumber()));
 
-        System.out.println("Лямбда = " + sys.getLambda() + "; Мю = " + sys.getMu() + "; Ро = " + sys.getRo());
+        System.out.println("Лямбда = " + sys.getFlowIntensity() + "; Мю = " + sys.getServiceIntensity() + "; Ро = " + sys.getSystemOverload());
         System.out.println("Ймовірність відмови (PN): " + PN);
         System.out.println("Середня кількість зайнятих вузлів: " + sys.getAverageOverload());
         System.out.println("Середня кількість вільних вузлів: " + (sys.getServicesNumber() - sys.getAverageOverload()));
         System.out.println("Відносна пропускна здатність: " + (1 - PN));
-        System.out.println("Абсолютна пропускна здатність: " + (1 - PN) * sys.getLambda());
+        System.out.println("Абсолютна пропускна здатність: " + (1 - PN) * sys.getFlowIntensity());
         System.out.println("Коефіцієнт зайнятості вузлів: " + sys.getAverageOverload() / sys.getServicesNumber());
 
         ErlangChart chart = new ErlangChart(sys);
     }
     public void lab4() {
         PoissonFlow flow = new PoissonFlow(
-                GeneralHelpers.calculateLambdaAlt(groupNumber, studentNumber, servicesNumberForFourthLab),
+                GeneralHelpers.calculateFlowIntensityAlt(groupNumber, studentNumber, servicesNumberForFourthNFifthLab),
                 studentNumber,
                 1,
                 201
@@ -134,14 +135,14 @@ public class MainApplication extends Application {
         flowPrinter.printAllSequences();
 
         System.out.println(flow.getTSequence().length);
-        MassServiceSystemWithRefusal massServiceSystem = new MassServiceSystemWithRefusal(flow, servicesNumberForFourthLab, averageServiceTime, defaultOverloadSize);
+        MassServiceSystemWithRefusal massServiceSystem = new MassServiceSystemWithRefusal(flow, servicesNumberForFourthNFifthLab, averageServiceTime, defaultOverloadSize);
 
-        ErlangSystem sys = new ErlangSystem(GeneralHelpers.calculateLambdaAlt(groupNumber, studentNumber, servicesNumberForFourthLab), averageServiceTime, true);
-        float val1 = (float)Math.pow(sys.getRo(), servicesNumberForFourthLab) / (float)GeneralHelpers.factorial(servicesNumberForFourthLab);
-        float val2 = sys.getSystemSum(servicesNumberForFourthLab);
+        ErlangDistributionFirst sys = new ErlangDistributionFirst(GeneralHelpers.calculateFlowIntensityAlt(groupNumber, studentNumber, servicesNumberForFourthNFifthLab), averageServiceTime, true);
+        float val1 = (float)Math.pow(sys.getSystemOverload(), servicesNumberForFourthNFifthLab) / (float)GeneralHelpers.factorial(servicesNumberForFourthNFifthLab);
+        float val2 = sys.getSystemSum(servicesNumberForFourthNFifthLab);
         float PN = (val1 / val2);
 
-        System.out.println("Лямбда = " + sys.getLambda() + "; Мю = " + sys.getMu() + "; Ро = " + sys.getRo());
+        System.out.println("Лямбда = " + sys.getFlowIntensity() + "; Мю = " + sys.getServiceIntensity() + "; Ро = " + sys.getSystemOverload());
         System.out.println(val1 + " " + val2);
         System.out.println("Ймовірність відмови (PN): " + PN);
 
@@ -149,6 +150,23 @@ public class MainApplication extends Application {
         MassServiceSystemWithRefusalXSL test = new MassServiceSystemWithRefusalXSL(massServiceSystem);
     }
     public void lab5() {
+        ErlangDistributionSecond sys = new ErlangDistributionSecond(groupNumber, studentNumber, servicesNumberForFourthNFifthLab);
 
+        System.out.println("Інтенсивність потоку (лямбда) = " + sys.getFlowIntensity()
+                        + "; інтенсивність обслуговування = " + sys.getServiceIntensity()
+                        + "; навантаження системи = " + sys.getSystemOverload()
+                        + "; ймовірність Р0 = " + sys.getP0());
+        System.out.println("Ймовірність наявності черги (Pk) = " + sys.getQueueProbability());
+        System.out.println("Ймовірність зайнятості всіх вузлів = " + sys.getAllNodesBusyProbability());
+        System.out.println("Середня кількість вимог в системі = " + sys.getAverageRequestsNumber());
+        System.out.println("Середня довжина черги = " + sys.getAverageQueueLength());
+        System.out.println("Середня кількість вільних вузлів = " + sys.getAverageFreeNodesLength());
+        System.out.println("Середня кількість зайнятих вузлів = " + sys.getAverageBusyNodesLength());
+        System.out.println("Середній час очікування = " + sys.getAverageWaitingTime());
+        System.out.println("Загальний час перебування вимог у черзі, що надійшли за одиницю часу (теж саме що середня довжина) = " + sys.getAverageQueueLength());
+        System.out.println("Середній час перебування вимог у системі = " + sys.getAverageTimeInSystem());
+        System.out.println("Сумарний час, що проводять всі вимоги в системі, що надійшли за одиницю часу = " + (sys.getAverageQueueLength() + sys.getSystemOverload()));
+
+        ErlangChart chart = new ErlangChart(sys);
     }
 }

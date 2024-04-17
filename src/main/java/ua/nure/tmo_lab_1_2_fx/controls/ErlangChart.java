@@ -5,11 +5,11 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.stage.Stage;
-import ua.nure.tmo_lab_1_2_fx.service.ErlangSystem;
+import ua.nure.tmo_lab_1_2_fx.service.ErlangDistribution;
 
 public class ErlangChart {
 
-    public ErlangChart(ErlangSystem sys) {
+    public ErlangChart(ErlangDistribution sys) {
         final NumberAxis xAxis = new NumberAxis();
         final NumberAxis yAxis = new NumberAxis();
         xAxis.setLabel("Кількість каналів, k");
@@ -22,7 +22,7 @@ public class ErlangChart {
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
         series.setName("Pk");
 
-        for (int k = 0; k <= sys.getServicesNumber(); k++) {
+        for (int k = 0; k <= sys.getPkLength(); k++) {
             series.getData().add(new XYChart.Data<>(k, sys.getPk(k)));
         }
 
