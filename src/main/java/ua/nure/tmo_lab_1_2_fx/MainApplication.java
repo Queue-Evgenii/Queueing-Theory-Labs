@@ -163,9 +163,9 @@ public class MainApplication extends Application {
         System.out.println("Середня кількість вільних вузлів = " + sys.getAverageFreeNodesLength());
         System.out.println("Середня кількість зайнятих вузлів = " + sys.getAverageBusyNodesLength());
         System.out.println("Середній час очікування = " + sys.getAverageWaitingTime());
-        System.out.println("Загальний час перебування вимог у черзі, що надійшли за одиницю часу (теж саме що середня довжина) = " + sys.getAverageQueueLength());
+        System.out.println("Загальний час перебування вимог у черзі, що надійшли в систему за одиницю часу = " + sys.getAverageQueueLength());
         System.out.println("Середній час перебування вимог у системі = " + sys.getAverageTimeInSystem());
-        System.out.println("Сумарний час, що проводять всі вимоги в системі, що надійшли за одиницю часу = " + (sys.getAverageQueueLength() + sys.getSystemOverload()));
+        System.out.println("Сумарний час, що проводять всі вимоги в системі, що надійшли в систему за одиницю часу = " + (sys.getAverageQueueLength() + sys.getSystemOverload()));
 
         ErlangChart chart = new ErlangChart(sys);
     }
